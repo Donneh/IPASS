@@ -1,1 +1,1 @@
-web: java -cp "target/dependency/*" $JAVA_OPTS -DDB_URL=postgres://gvydjqgzbmciok:a9991ea70eab8bea8bf4f2ad5d5a68ae7bea8f975e3d76c56002ec46f775d683@ec2-79-125-127-60.eu-west-1.compute.amazonaws.com:5432/d78ku3ajpu716g webapp.runner.launch.Main --enable-naming --context-xml src/main/webapp/META-INF/contextheroku.xml --port 5432 target/*.war
+web: java -cp "target/dependency/*" $JAVA_OPTS -DDB_URL=$JDBC_DATABASE_URL webapp.runner.launch.Main --enable-naming --context-xml src/main/webapp/META-INF/context-heroku.xml --port $PORT target/*.war
