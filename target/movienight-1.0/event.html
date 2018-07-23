@@ -55,7 +55,11 @@
         });
 
         document.getElementById("delete_event").addEventListener("click", function (e) {
-
+            fetch("/restservices/events/event/delete/?" + window.location.search.substr(1), {
+                method: "DELETE"
+            }).then(response => response.json()).then(data => {
+                window.location = "events.html";
+            });
         });
     });
 </script>
