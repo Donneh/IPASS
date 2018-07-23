@@ -6,6 +6,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />
         <datasource-mapping>
+          <factory-entry name="Entities" />
           <factory-entry name="com.movienight" value="89f7001f-6064-4442-b8fb-d3fca1fe308e" />
           <factory-entry name="nl.p4" value="89f7001f-6064-4442-b8fb-d3fca1fe308e" />
         </datasource-mapping>

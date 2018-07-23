@@ -1,6 +1,6 @@
 package com.movienight.webservice;
 
-import com.movienight.model.dao.UserDao;
+import com.movienight.model.dao.UserDaoOracle;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response;
 @Path("/users")
 public class UserResource {
 
-    private UserDao userDao = new UserDao();
+    private UserDaoOracle userDao = new UserDaoOracle();
 
     @GET
     @Produces("application/json")

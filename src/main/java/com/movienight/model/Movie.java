@@ -1,16 +1,11 @@
 package com.movienight.model;
 
-import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "movies")
 public class Movie {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_sequence")
-    @SequenceGenerator(name = "movie_sequence", sequenceName = "MOVIE_SEQ")
     private int id;
     private String title;
     private Date release_date;
@@ -18,14 +13,7 @@ public class Movie {
     private String poster;
     private Date created_at;
     private Date updated_at;
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "movie_genre",
-            joinColumns = { @JoinColumn(name = "movie_id") },
-            inverseJoinColumns = { @JoinColumn(name = "genre_id")}
-    )
-    private List<Genre> genres;
-    private int tmdb_id;
+    private List<Genre> genres = new ArrayList<>();
 
     public Movie(String title, Date release_date, String synopsis, String poster) {
         this.title = title;
@@ -109,14 +97,6 @@ public class Movie {
         this.genres = genres;
     }
 
-    public int getTmdb_id() {
-        return tmdb_id;
-    }
-
-    public void setTmdb_id(int tmdb_id) {
-        this.tmdb_id = tmdb_id;
-    }
-
     public void addGenre(Genre genre) {
         genres.add(genre);
     }
@@ -132,7 +112,6 @@ public class Movie {
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", genres=" + genres +
-                ", tmdb_id=" + tmdb_id +
                 '}';
     }
 }

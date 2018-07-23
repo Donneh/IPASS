@@ -1,23 +1,18 @@
 package com.movienight.model;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "users")
 public class User {
 
-    @Id
     private int id;
     private String username;
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "User_Movie",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "movie_id") }
-    )
     private List<Movie> watched = new ArrayList<Movie>();
+
+    public User(int id, String username) {
+        this.id = id;
+        this.username = username;
+    }
 
     public int getId() {
         return id;

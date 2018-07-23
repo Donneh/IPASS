@@ -7,9 +7,8 @@
     <link rel="stylesheet" href="app.css">
 </head>
 <body>
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Movienight</a>
+    <a class="navbar-brand" href="/">Movienight</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -22,11 +21,11 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-            </li>
             <li class="nav-item">
-                <a class="nav-link" href="movies.html">Movies</a>
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="movies.html">Movies <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="events.html">Events</a>
@@ -34,16 +33,13 @@
         </ul>
     </div>
 </nav>
-
-<div class="container">
-    <div class="jumbotron">
-        <h1 class="display-4">Hello,!</h1>
-        <p class="lead">Movienight is a website that tries to help you organize a movienight.</p>
-        <hr class="my-4">
-    </div>
-</div>
-
+<h1 id="movie_title"></h1>
+<button id="watched">Watched</button>
 <script>
+    fetch("restservices/movies/movie/?" + window.location.search.substr(1)).then(response => response.json()).then(data => {
+        document.getElementById("movie_title").innerText = data.title;
+        document.getElementById("watched").
+    });
 </script>
 </body>
 </html>
