@@ -9,7 +9,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="#">Movienight</a>
+        <a class="navbar-brand" href="/">Movienight</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -21,14 +21,14 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="movies.html">Movies</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="events.html">Events</a>
+                <li class="nav-item active">
+                    <a class="nav-link" href="events.html">Events <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
         </div>
@@ -64,7 +64,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Add users</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" id="close_modal" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -89,7 +89,7 @@
         addEvent(encData);
     });
 
-    document.getElementById("skip_event").addEventListener("click", function (e) {
+    document.getElementById("close_modal").addEventListener("click", function (e) {
         document.getElementById("modal").style.display = "hidden";
     });
 
@@ -97,7 +97,12 @@
         e.preventDefault();
         let formData = new FormData(document.getElementById("add_guests_form"));
         let encData = new URLSearchParams(formData.entries());
-        console.log(encData);
+        fetch("/restservices/events/event/addGuests", {
+            method: "POST",
+            body: encData
+        }).then(response => response.json()).then(function (data) {
+            console.log(data);
+        });
         document.getElementById("modal").style.display = "hidden";
     });
 
@@ -106,30 +111,36 @@
             method: "POST",
             body: encData
         }).then(response => response.json()).then(function (result) {
+            document.getElementById("skip_event").addEventListener("click", function (e) {
+                window.location = "event.html?id=" + result.id;
+            });
             document.getElementById("modal").style.display = "block";
             fetch("/restservices/users").then(response => response.json()).then(data => {
                 let userList = document.getElementById("user_list");
-                console.log(data);
-                for(user in data) {
-                    console.log(user);
+                let event_id = document.createElement("input");
+                event_id.setAttribute("type", "hidden");
+                event_id.setAttribute("name", "event_id");
+                event_id.setAttribute("value", result.id);
+                userList.appendChild(event_id);
+                for(let user of data) {
                     let row = document.createElement("div");
-                    row.class = "row";
+                    row.classList.add("row");
                     let column1 = document.createElement("div");
-                    column1.class = "col";
+                    column1.classList.add("col");
                     let userName = document.createElement("label");
-                    userName.for = data.id;
-                    userName.innerText = data.username;
+                    userName.for = user.id;
+                    userName.innerText = user.username;
 
                     column1.appendChild(userName);
                     row.appendChild(column1);
 
                     let column2 = document.createElement("div");
-                    column2.class = "col";
+                    column2.classList.add("col");
 
                     let invite_button = document.createElement("input");
-                    invite_button.id = data.id;
+                    invite_button.id = user.id;
                     invite_button.type = "checkbox";
-                    invite_button.value = "data.id";
+                    invite_button.value = user.id;
                     invite_button.name = "guests[]";
 
                     column2.appendChild(invite_button);
@@ -137,6 +148,7 @@
                     userList.appendChild(row);
                 }
             })
+
         })
     }
 </script>

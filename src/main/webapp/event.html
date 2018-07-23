@@ -7,14 +7,12 @@
     <link rel="stylesheet" href="app.css">
 </head>
 <body>
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="/">Movienight</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
 
         <form class="form-inline my-2 my-lg-0" method="GET" action="movie_search.html">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-label="Search">
@@ -23,14 +21,14 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="movies.html">Movies</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="events.html">Events</a>
+                <li class="nav-item active">
+                    <a class="nav-link" href="events.html">Events  <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
         </div>
@@ -38,14 +36,28 @@
 </nav>
 
 <div class="container">
-    <div class="jumbotron">
-        <h1 class="display-4">Hello,</h1>
-        <p class="lead">Movienight is a website that tries to help you organize a movienight.</p>
-        <hr class="my-4">
-    </div>
+    <h1 id="event_name">Event name</h1>
+    <p id="event_description">Event description</p>
+    <p id="event_host">Event host</p>
+    <button id="update_event" class="btn btn-primary">Update</button>
+    <button id="delete_event" class="btn btn-primary">Delete</button>
 </div>
 
 <script>
+    let event_url = "restservices/events/event/?" + window.location.search.substr(1);
+    fetch(event_url).then(response => response.json()).then(data => {
+        document.getElementById("event_name").innerText = data.name;
+        document.getElementById("event_description").innerText = data.name;
+        document.getElementById("event_host").innerText = data.host.username;
+
+        document.getElementById("update_event").addEventListener("click", function (e) {
+            window.location = "update_event.html?id=" + data.id;
+        });
+
+        document.getElementById("delete_event").addEventListener("click", function (e) {
+
+        });
+    });
 </script>
 </body>
 </html>

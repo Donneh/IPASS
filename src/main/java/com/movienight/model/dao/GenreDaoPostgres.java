@@ -2,14 +2,11 @@ package com.movienight.model.dao;
 
 import com.movienight.model.Genre;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenreDaoOracle extends OracleBaseDao {
+public class GenreDaoPostgres extends PostgresBaseDao {
 
     /**
      * Save genre to the database.
@@ -17,10 +14,10 @@ public class GenreDaoOracle extends OracleBaseDao {
      * @return Genre | null
      */
     public Genre save(Genre genre) {
-        try {
+        try(Connection conn = getConnection()) {
             String query = "INSERT INTO genres (name) VALUES (?)";
             String generatedColumns[] = { "id" };
-            PreparedStatement stmt = getConnection().prepareStatement(query, generatedColumns);
+            PreparedStatement stmt = conn.prepareStatement(query, generatedColumns);
             stmt.setString(1, genre.getName());
             stmt.executeUpdate();
 
@@ -40,14 +37,16 @@ public class GenreDaoOracle extends OracleBaseDao {
      * @return Genre | null
      */
     public Genre find(int id) {
-        try {
+        try(Connection conn = getConnection()) {
             String query = "SELECT * FROM genres WHERE id = ?";
-            PreparedStatement stmt = getConnection().prepareStatement(query);
+            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, id);
             ResultSet result = stmt.executeQuery();
+            Genre genre = null;
             if(result.next()) {
-                return buildGenreObject(result);
+                genre = buildGenreObject(result);
             }
+            return genre;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,9 +59,9 @@ public class GenreDaoOracle extends OracleBaseDao {
      * @return Genre | null
      */
     public Genre findByName(String name) {
-        try {
+        try(Connection conn = getConnection()) {
             String query = "SELECT * FROM genres WHERE name = ?";
-            PreparedStatement stmt = getConnection().prepareStatement(query);
+            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, name);
             ResultSet result = stmt.executeQuery();
             if(result.next()) {
@@ -74,13 +73,17 @@ public class GenreDaoOracle extends OracleBaseDao {
         return null;
     }
 
+    /**
+     * Retrieves all genres from the database.
+     * @return List
+     */
     public List<Genre> index() {
-        try {
+        try(Connection conn = getConnection()) {
             String query = "SELECT * FROM genres";
-            Statement stmt = getConnection().createStatement();
+            Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery(query);
             List<Genre> genres = new ArrayList<>();
-            if(result.next()) {
+            while(result.next()) {
                 genres.add(buildGenreObject(result));
             }
             return genres;
@@ -90,15 +93,20 @@ public class GenreDaoOracle extends OracleBaseDao {
         return null;
     }
 
+    /**
+     * Retrieves all genres from the given movie.
+     * @param id
+     * @return List
+     */
     public List<Genre> findByMovie(int id) {
-        try {
-            String query = "SELECT * FROM MOVIE_GENRE WHERE MOVIE_ID = ?";
-            PreparedStatement stmt = getConnection().prepareStatement(query);
+        try(Connection conn = getConnection()) {
+            String query = "SELECT * FROM MOVIE_GENRE WHERE movie_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, id);
 
             ResultSet result = stmt.executeQuery();
             List<Genre> genres = new ArrayList<>();
-            if (result.next()) {
+            while (result.next()) {
                 genres.add(find(result.getInt("GENRE_ID")));
             }
             return genres;

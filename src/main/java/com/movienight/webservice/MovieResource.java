@@ -1,13 +1,13 @@
 package com.movienight.webservice;
 
-import com.movienight.model.dao.MovieDaoOracle;
+import com.movienight.model.dao.MovieDaoPostgres;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 @Path("/movies")
 public class MovieResource {
 
-    private MovieDaoOracle movieDao = new MovieDaoOracle();
+    private MovieDaoPostgres movieDao = new MovieDaoPostgres();
 
     @GET
     @Produces("application/json")

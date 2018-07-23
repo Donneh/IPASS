@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movienight</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Movienight</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <form class="form-inline my-2 my-lg-0" method="GET" action="movie_search.html">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
+        </form>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="movies.html">Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="events.html">Events</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Update event</h1>
+    <form method="PUT" id="update_event_form">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" name="name" class="form-control" id="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea name="description" class="form-control" id="description" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" name="date" class="form-control" id="date" required>
+        </div>
+        <input type="hidden" id="event_id" name="event_id">
+
+        <button type="submit" id="update_event_button" class="btn btn-primary">Update</button>
+    </form>
+</div>
+
+<script>
+    fetch("/restservices/events/event/?" + window.location.search.substr(1))
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            document.getElementById("name").value = data.name;
+            document.getElementById("description").value = data.description;
+            document.getElementById("event_id").value = data.id;
+        });
+
+    document.getElementById("update_event_button").addEventListener("click", function (e) {
+        e.preventDefault();
+        let formData = new FormData(document.getElementById("update_event_form"));
+        let encData = new URLSearchParams(formData.entries());
+        fetch("/restservices/events/event/update/?" + window.location.search.substr(1), {
+            method: "PUT",
+            body: encData
+        }).then(response => response.json()).then(data => {
+                console.log(data);
+        });
+    });
+</script>
+</body>
+</html>
